@@ -9,8 +9,6 @@ on:
     types: [opened, reopened, synchronize]
   pull_request_review_comment:
     types: [created]
-  push:
-    branches: [main, master]
 
 jobs:
   claude-respond-to-issue:
@@ -25,7 +23,6 @@ jobs:
       - name: Respond to issue with Claude
         uses: anthropics/claude-code-action@beta
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           trigger_phrase: "@claude"
         env:
@@ -45,31 +42,7 @@ jobs:
       - name: Review PR with Claude
         uses: anthropics/claude-code-action@beta
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           trigger_phrase: "@claude"
-        env:
-          CLAUDE_AUTH_TOKEN: ${{ secrets.CLAUDE_AUTH_TOKEN }}
-
-  claude-analyze-push:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Analyze pushed changes with Claude
-        uses: anthropics/claude-code-action@beta
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          direct_prompt: |
-            Analyze the most recent commit pushed to ${{ github.ref_name }}.
-            Summarize what changed, flag any potential issues or regressions,
-            and suggest improvements if relevant. Be concise.
         env:
           CLAUDE_AUTH_TOKEN: ${{ secrets.CLAUDE_AUTH_TOKEN }}
