@@ -1,6 +1,6 @@
- name: Claude AI Assistant
+name: Claude AI Assistant
 
-  on:
+on:
     issues:
       types: [opened, reopened]
     issue_comment:
@@ -10,7 +10,7 @@
     pull_request_review_comment:
       types: [created]
 
-  jobs:
+jobs:
     claude-respond-to-issue:
       if: github.event_name == 'issues' || (github.event_name == 'issue_comment' && !github.event.issue.pull_request)
       runs-on: ubuntu-latest
